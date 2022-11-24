@@ -1,0 +1,61 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>My crm</h1>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        {% for user in users %}
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.full_name }}</h5>
+                    <p class="card-text">
+                        {% if user.phone_number %}<span class="d-block color-primary">{{ user.phone_number }}</span>{% endif %}
+                        {% if user.address %}<span>{{ user.address }}</span>{% endif %}
+                    </p>
+                    <form method="POST" action="{% url 'delete-user' %}">
+                        {% csrf_token %} <input type="hidden" name="first_name" value="{{ user.first_name }}">
+                        <input type="hidden" name="last_name" value="{{ user.last_name }}">
+                        <button class="btn btn-danger btn-sm" type="submit">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="row mt-5">
+        <form method="POST" action="{% url 'create-user' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="first_name">First name</label> <input class="form-control" type="text" id="first_name" name="first_name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="last_name">Last name</label> <input class="form-control" type="text" id="last_name" name="last_name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="address">Address</label> <textarea class="form-control" name="address" id="address" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="phone_number">Phone number</label> <input class="form-control" type="text" id="phone_number" name="phone_number">
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
